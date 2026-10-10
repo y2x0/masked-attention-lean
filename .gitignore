@@ -1,0 +1,7 @@
+.venv/
+.lake/
+__pycache__/
+.pytest_cache/
+vendor/jax-lean/.lake/
+
+.downloads/

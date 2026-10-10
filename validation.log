@@ -1,0 +1,18 @@
+Resolved 16 packages in 10ms
+Checked 12 packages in 0.95ms
+Generated3.lean
+Generated5.lean
+......                                                                   [100%]
+6 passed in 2.65s
+✔ [3087/3091] Built MaskedAttention.Generated3 (15s)
+✔ [3088/3091] Built MaskedAttention.Generated5 (15s)
+✔ [3089/3091] Built MaskedAttention.Connection (2.0s)
+✔ [3090/3091] Built MaskedAttention (2.4s)
+Build completed successfully (3091 jobs).
+'MaskedAttention.pool_reindex' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.pool_padding' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.pool_masked_congr' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.pool_all_masked' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.attention_permutation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.certified_permutation' depends on axioms: [propext, Classical.choice, Quot.sound]
+'MaskedAttention.certified_padding' depends on axioms: [propext, Classical.choice, Quot.sound]

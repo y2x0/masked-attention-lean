@@ -1,0 +1,3 @@
+[submodule "vendor/jax-lean"]
+	path = vendor/jax-lean
+	url = https://github.com/srush/jax-lean.git

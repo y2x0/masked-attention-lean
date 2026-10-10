@@ -1,0 +1,12 @@
+[project]
+name = "masked-attention-lean"
+version = "0.1.0"
+requires-python = ">=3.11"
+dependencies = ["jax[cpu]==0.8.0", "jaxlean", "pytest>=8,<10"]
+
+[tool.uv.sources]
+jaxlean = { path = "vendor/jax-lean", editable = true }
+
+[tool.pytest.ini_options]
+pythonpath = ["python"]
+testpaths = ["tests"]

@@ -1,0 +1,10 @@
+name = "masked_attention"
+version = "0.1.0"
+defaultTargets = ["MaskedAttention"]
+
+[[require]]
+name = "jaxlean"
+path = "vendor/jax-lean"
+
+[[lean_lib]]
+name = "MaskedAttention"
