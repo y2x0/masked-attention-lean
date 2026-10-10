@@ -88,3 +88,12 @@ Upstream reference: `srush/jax-lean` revision
 `570aed69049f8e2931df9f55175313a340bcb456`, including
 `examples/transformer/proofs/TransformerProofs.lean` and
 `SUPPORTED_JAXPR.md` for the existing proof pattern and semantic boundary.
+
+## Typeset guide
+
+Read [the five-page PDF](output/pdf/masked-attention-pooling.pdf), or edit
+[the LaTeX source](output/pdf/masked-attention-pooling.tex). Rebuild locally with:
+
+```sh
+latexmk -pdf -outdir=output/pdf output/pdf/masked-attention-pooling.tex
+```
