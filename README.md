@@ -1,7 +1,6 @@
 # Masked attention pooling in Lean
 
-A local MIL example built on [srush/jax-lean](https://github.com/srush/jax-lean).
-The project stays in the Developer folder. Do not push or publish it.
+A MIL example built on [srush/jax-lean](https://github.com/srush/jax-lean).
 
 Checked locally: all Lean proofs and translation certificates compile, all seven
 theorem axiom audits pass, and six JAX tests pass. See `VALIDATION.md` and `validation.log`.
@@ -21,15 +20,19 @@ An all-masked or empty bag returns the zero vector.
 ## Run locally
 
 ```sh
-cd /Users/yusufsadek/Developer/masked-attention-lean
-uv sync
+git clone --recurse-submodules https://github.com/y2x0/masked-attention-lean.git
+cd masked-attention-lean
+./scripts/bootstrap.sh
 uv run pytest -q
 uv run python python/demo.py
 uv run python python/generate.py --check
 ~/.elan/bin/lake build
 ```
 
-CPU JAX runs on this Mac; no CUDA installation or cluster connection is needed.
+Prerequisites: [uv](https://docs.astral.sh/uv/) and
+[elan](https://github.com/leanprover/elan).
+
+CPU JAX runs on macOS; no CUDA installation or cluster connection is needed.
 Python dependencies stay in `.venv`. Lean's toolchain manager lives in `~/.elan`.
 Lean and JAX versions are pinned to match the upstream library.
 For a single command that repeats all checks, run `./scripts/check.sh`.

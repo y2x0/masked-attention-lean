@@ -18,4 +18,5 @@ all-masked and empty bags, length masking, and stable evaluation of logits near 
 These numerical tests are evidence of execution only. They do not replace the
 Lean proofs or prove equality of floating-point computations.
 
-The local repository has no remote. No push or publication occurred.
+At the validation date above, the repository was local and no upload had occurred.
+On 2026-10-10, publication was authorized to `y2x0/masked-attention-lean` as a public repository. Upstream modifications and pull requests remain outside the authorized scope.
