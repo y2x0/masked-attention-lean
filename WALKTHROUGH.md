@@ -1,64 +1,69 @@
-# Understanding the proof
+# Reading the proofs
 
-Start with a bag of two real instances, values `a, b`, and logits `u, v`.
-For one output feature the result is
+## The idea with two instances
+
+Take a bag with two instances, values `a` and `b`, logits `u` and `v`. For one
+output feature the pooled value is
 
 ```
-(exp(u) * a + exp(v) * b) / (exp(u) + exp(v)).
+(exp(u) * a + exp(v) * b) / (exp(u) + exp(v))
 ```
 
-Appending a padded instance adds zero to both sums, whatever its value or logit.
-Swapping the two instances swaps the two terms in each sum; addition is commutative.
-The Lean proofs repeat these arguments for every finite bag size and every feature.
+Add a padded row. Its mask is false, so it adds 0 to the top and 0 to the
+bottom, whatever its value and logit are. Swap the two instances and you swap
+two terms in each sum, which doesn't change anything. The Lean proofs make the
+same two arguments for any finite bag and every feature.
 
-## Reading the Lean notation
+## Lean notation you'll run into
 
-`Fin d` is a valid feature index: one of `0, ..., d-1`.
-`ι → Fin d → ℝ` says that each row has a real-valued feature vector.
-`[Fintype ι]` says that the set of rows is finite, so Lean can sum over it.
-`e : κ ≃ ι` is a bijection: it reindexes every row exactly once.
-`values ∘ e` means `fun i => values (e i)`.
-`∑ i, ...` is a finite sum over all valid row indices.
-`funext j` says: to prove two output vectors equal, prove their feature `j` equal.
+- `Fin d` is a feature index, one of `0, ..., d-1`.
+- `ι → Fin d → ℝ` is a bag: each row index gives a real feature vector.
+- `[Fintype ι]` says there are finitely many rows, so we can sum over them.
+- `e : κ ≃ ι` is a bijection between two row index types.
+- `values ∘ e` is `fun i => values (e i)`, i.e. the rows reordered by `e`.
+- `∑ i, ...` sums over all rows.
+- `funext j` proves two vectors equal by proving them equal at each feature `j`.
 
-`pool_reindex` uses `e.sum_comp` twice: once on the normalizing mass and once
-on the feature numerator. After those substitutions, the two sides are identical.
+## Permutation (`pool_reindex`)
 
-For padding, `Sum ι κ` is the disjoint union of real and added row positions.
-`Sum.elim values padding` chooses the right data for each side. The new side's
-mask is false. `Fintype.sum_sum_type` splits each sum into original rows plus
-new rows. Every term in the new sum is zero, so `simp` closes the equality.
+`e.sum_comp` says that summing `g (e k)` over `k` is the same as summing
+`g i` over `i` when `e` is a bijection. The proof uses it twice, once for the
+denominator and once for the numerator, and then both sides are literally the
+same expression.
 
-The theorem handles arbitrary invalid rows already present in the original bag.
-The added rows need not have zero features or zero logits. Only the mask matters.
+## Padding (`pool_padding`)
 
-## From Python to the theorem
+The padded bag is indexed by `Sum ι κ`, the original rows plus the new ones.
+`Sum.elim values padding` picks the original data on the left and the padding
+on the right, and the mask on the right is always false.
+`Fintype.sum_sum_type` splits each sum into the original rows plus the new
+rows. Every new term is zero, so `simp` finishes it.
 
-1. JAX traces `masked_pool` for a chosen fixed input shape.
-2. `jaxlean.certify_module` writes a readable Lean tensor function and an imported,
-   typed mathematical Jaxpr, including helper calls for `where`.
-3. Lean checks generated translation theorems connecting that function to the
-   imported mathematical Jaxpr evaluator for every real input of that shape.
-4. `generated3_spec` and `generated5_spec` identify those generated functions with
-   the size-generic `pool` definition. This checks the mask branches, sums, and denominator.
-5. The generic invariance theorems apply. The final `certified_*` theorems carry
-   the result back across the translation certificates to the mathematical Jaxpr.
+Nothing is assumed about the padded values or logits, only that they're
+masked. Masked rows that were already in the original bag are fine too.
 
-JAX's Python tracer/importer remain trusted, and machine rounding is outside the
-model. The mathematical invariance is exact; the JAX tests allow floating-point tolerance.
+## From Python to the theorems
 
-## Why instance-local scoring matters
+1. JAX traces `masked_pool` at a fixed shape.
+2. `jaxlean.certify_module` writes a readable Lean function and a typed copy of
+   the Jaxpr, with a certificate that they agree on every real input.
+3. `generated3_spec` and `generated5_spec` show each generated function equals
+   the general `pool`. This is where the mask handling, the sums and the
+   guarded denominator actually get checked.
+4. The general theorems apply, and `certified_permutation` and
+   `certified_padding` restate them about the Jaxpr itself.
 
-A shared scorer `score(x[i])` moves with each row. It can be linear, nonlinear,
-or gated, provided it does not depend on the row's position or other rows' order.
-`attention_permutation` proves the result for any such function; no particular
-weights or activation are assumed.
+The tracer and importer are trusted, and floating point is out of scope. The
+identities are exact over the reals; the JAX tests use tolerances.
 
-A contextual encoder can also work if separately proved permutation equivariant
-and insensitive to padding. These pooling proofs alone do not establish that
-property for an entire encoder or training pipeline.
+## Why the scorer has to be per-instance
 
-## What to run when learning
+If the logit is `score(x[i])` for some shared function `score`, the logit moves
+with its row when you shuffle, which is exactly what `pool_reindex` needs.
+`attention_permutation` proves this for any `score`, with no assumptions about
+its form. A scorer that looks at position, or at other rows, isn't covered.
+
+## Where to start
 
 ```sh
 uv run python python/demo.py
@@ -66,6 +71,6 @@ uv run python python/demo.py
 ~/.elan/bin/lake env lean ProofAudit.lean
 ```
 
-Change the demo's padding values or permutation and run it again. Then read
-`Basic.lean` before `Connection.lean`. The generated files are implementation
-detail; you do not need to start by reading their typed SSA environments.
+Try changing the padding or the permutation in the demo. Then read
+`Basic.lean`, then `Connection.lean`. You don't need to read the generated
+files to follow the argument.

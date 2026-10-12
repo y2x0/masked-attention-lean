@@ -3,12 +3,5 @@
 __pycache__/
 .pytest_cache/
 vendor/jax-lean/.lake/
-
 .downloads/
-
-tmp/pdfs/
-output/pdf/*.aux
-output/pdf/*.log
-output/pdf/*.out
-output/pdf/*.fls
-output/pdf/*.fdb_latexmk
+tmp/
