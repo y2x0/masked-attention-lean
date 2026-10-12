@@ -17,6 +17,7 @@ for n in (3, 5):
         jax.ShapeDtypeStruct((n,), jnp.bool_),
     )
     source = certify_module(program, name="pool", namespace=f"MaskedAttention.Generated{n}")
+    # helpers like fn__where have a double underscore, which mathlib's name linter flags
     source = source.replace("import JaxLean.Core.RealOps\n",
                             "import JaxLean.Core.RealOps\n\nset_option linter.style.nameCheck false\n", 1)
     path = root / "MaskedAttention" / f"Generated{n}.lean"

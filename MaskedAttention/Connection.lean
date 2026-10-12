@@ -13,7 +13,7 @@ theorem generated3_spec (x : Tensor ℝ [3, 2]) (s : Tensor ℝ [3]) (m : Tensor
     Generated3.pool x s m = fun j =>
       pool (fun i j => x (i, j, ())) (fun i => s (i, ())) (fun i => m (i, ())) j.1 := by
   funext j
-  simp (config := { contextual := true }) [Generated3.pool, Generated3.fn__where, Generated3.fn__where_2,
+  simp +contextual [Generated3.pool, Generated3.fn__where, Generated3.fn__where_2,
     Generated3.fn__where_3, pool, mass, Tensor.map, Tensor.map₂,
     Tensor.reindex, Tensor.scalar, Tensor.sumFirst, RealOps.exp]
 
@@ -21,7 +21,7 @@ theorem generated5_spec (x : Tensor ℝ [5, 2]) (s : Tensor ℝ [5]) (m : Tensor
     Generated5.pool x s m = fun j =>
       pool (fun i j => x (i, j, ())) (fun i => s (i, ())) (fun i => m (i, ())) j.1 := by
   funext j
-  simp (config := { contextual := true }) [Generated5.pool, Generated5.fn__where, Generated5.fn__where_2,
+  simp +contextual [Generated5.pool, Generated5.fn__where, Generated5.fn__where_2,
     Generated5.fn__where_3, pool, mass, Tensor.map, Tensor.map₂,
     Tensor.reindex, Tensor.scalar, Tensor.sumFirst, RealOps.exp]
 
