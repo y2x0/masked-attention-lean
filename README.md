@@ -5,6 +5,8 @@ doesn't care how much padding you add or what order the instances are in. The
 proofs are connected to the actual JAX kernel through
 [jax-lean](https://github.com/srush/jax-lean).
 
+Paper: [arXiv:2610.17132](https://arxiv.org/abs/2610.17132)
+
 ## The problem
 
 When you batch MIL bags you pad them to a common length and pass a mask. The
@@ -126,3 +128,16 @@ ProofAudit.lean              prints the axioms each main theorem uses
 
 None of this says anything about model accuracy. It's about the pooling layer
 behaving the way you'd assume it does.
+
+## Citing
+
+```bibtex
+@misc{sadek2026maskedattention,
+  title         = {Masked Attention Pooling Is Invariant to Padding and Permutation: A Formal Proof in Lean},
+  author        = {Sadek, Yusuf Khaled and Yilmaz, Enes},
+  year          = {2026},
+  eprint        = {2610.17132},
+  archivePrefix = {arXiv},
+  primaryClass  = {cs.LG}
+}
+```
